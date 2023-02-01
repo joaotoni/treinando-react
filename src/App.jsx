@@ -1,9 +1,12 @@
+import './App.css'
+import StartScreen from './components/StartScreen'
+import './index.css'
 
 function App() {
 
   return (
-    <div>
-     
+    <div className='App'>
+      <StartScreen />
     </div>
   )
 }

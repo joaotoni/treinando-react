@@ -20,6 +20,11 @@ function App() {
   const [pickedWord, setPickedWord] = useState("")
   const [pickedCategory, setPickedCategory] = useState("")
   const [letters, setLetters] = useState([])
+
+  const [guessedLetters, setGuessedLetters] = useState([])
+  const [wrongLetters, setWrongLetters] = useState([])
+  const [guesses, setGuesses] = useState(3)
+  const [score, setScore] = useState(0)
   
   function pickWordAndCategory (){
     // pick random category
@@ -41,17 +46,34 @@ function App() {
 
     wordLetters = wordLetters.map((l) => l.toLowerCase())
 
-    setPickedCategory(category)
     setPickedWord(word)
-    setLetters(letters)
+    setPickedCategory(category)
+    setLetters(wordLetters)
 
     setGameStage(stages[1].name)
     console.log(wordLetters)
   }
 
-  function verifyLetter(){
+  function verifyLetter(letter){
+    const normalizedLetter = letter.toLowerCase()
 
-    setGameStage(stages[2].name)
+    if(guessedLetters.includes(normalizedLetter) || wrongLetters.includes(normalizedLetter)){
+      return
+    }
+
+    if(letters.includes(normalizedLetter)) {
+      setGuessedLetters((actualGuessedLetters) => [
+        ...actualGuessedLetters,
+        normalizedLetter
+      ])
+    } else{
+      setWrongLetters((actualWrongLetters) => [
+        ...actualWrongLetters,
+        normalizedLetter
+      ])
+    }
+    console.log(guessedLetters)
+    console.log(wrongLetters)
   }
   function retry(){
 
@@ -60,7 +82,16 @@ function App() {
   return (
     <div className='App'>
       {gameStage == 'start' ? <StartScreen  startGame={startGame} />: null}
-      {gameStage == 'game' && <Game verifyLetter={verifyLetter} />} 
+      {gameStage == 'game' && <Game 
+        verifyLetter={verifyLetter} 
+        pickedCategory={pickedCategory} 
+        pickedWord={pickedWord}
+        letters={letters}
+        guessedLetters={guessedLetters}
+        wrongLetters={wrongLetters}
+        guesses={guesses}
+        score={score}
+      />} 
       {gameStage == 'end' && <GameOver retry={retry} />}
     
     </div>
